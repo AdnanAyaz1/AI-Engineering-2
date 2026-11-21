@@ -34,12 +34,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       question,
-
       answer: result.answer,
-
       sources: chunks,
       totalResults: chunks.length,
-
       usage: result.usage,
       cost: result.cost,
     });

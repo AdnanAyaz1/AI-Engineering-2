@@ -23,6 +23,19 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mt-4">
             <Link
+              href="/upload"
+              className="p-4 rounded-xl border border-blue-500/30 bg-blue-50/50 dark:bg-blue-950/20 hover:border-blue-500 transition-all text-left group sm:col-span-2"
+            >
+              <div className="text-sm font-semibold text-blue-800 dark:text-blue-300 flex items-center justify-between">
+                <span>📤 Document Ingestion</span>
+                <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+              </div>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                Upload PDF, DOCX, or TXT documents to chunk, embed, and store into pgvector.
+              </p>
+            </Link>
+
+            <Link
               href="/rag-chat"
               className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 hover:border-emerald-500 transition-all text-left group"
             >
