@@ -5,6 +5,7 @@ import {
   ALLOWED_EXTENSIONS,
   MAX_FILE_SIZE_BYTES,
   MAX_FILE_SIZE_LABEL,
+  type AllowedExtension,
 } from '@/constants/upload';
 import type { UploadResult, UploadStatus, UseDocumentUploadReturn } from '@/types/upload';
 
@@ -19,7 +20,7 @@ export function useDocumentUpload(): UseDocumentUploadReturn {
 
   const validateFile = (candidate: File): string | null => {
     const ext = candidate.name.split('.').pop()?.toLowerCase();
-    if (!ext || !ALLOWED_EXTENSIONS.includes(ext as any)) {
+    if (!ext || !ALLOWED_EXTENSIONS.includes(ext as AllowedExtension)) {
       return `Unsupported file format ".${ext || 'unknown'}". Allowed formats: ${ALLOWED_EXTENSIONS.join(', ')}.`;
     }
 

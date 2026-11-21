@@ -1,7 +1,7 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { useState } from 'react';
+import { useState, type ComponentPropsWithoutRef } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -102,7 +102,7 @@ export default function ChatPage() {
                                 p: ({ children }) => (
                                   <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>
                                 ),
-                                code: ({ node, className, children, ...props }: any) => {
+                                code: ({ className, children, ...props }: ComponentPropsWithoutRef<'code'>) => {
                                   // Determine if inline or code block
                                   const isInline = !className && typeof children === 'string' && !children.includes('\n');
                                   if (isInline) {

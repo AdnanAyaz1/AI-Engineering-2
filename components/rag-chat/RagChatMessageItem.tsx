@@ -1,4 +1,5 @@
-import ReactMarkdown from "react-markdown";
+import type { ComponentPropsWithoutRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 import { RagChatSources } from "./RagChatSources";
 import type { ChatMessage } from "@/types/ragChat";
@@ -44,7 +45,7 @@ export function RagChatMessageItem({
                     {children}
                   </p>
                 ),
-                code: ({ className, children, ...props }: any) => {
+                code: ({ className, children, ...props }: ComponentPropsWithoutRef<'code'>) => {
                   const isInline =
                     !className &&
                     typeof children === "string" &&

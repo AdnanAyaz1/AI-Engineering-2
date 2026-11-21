@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ComponentPropsWithoutRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -68,7 +68,7 @@ export function FormattedChunk({
                 {children}
               </p>
             ),
-            code: ({ className, children, ...props }: any) => {
+            code: ({ className, children, ...props }: ComponentPropsWithoutRef<'code'>) => {
               const isInline =
                 !className &&
                 typeof children === "string" &&

@@ -1,5 +1,7 @@
 export const ALLOWED_EXTENSIONS = ['pdf', 'docx', 'txt'] as const;
 
+export type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number];
+
 export const ALLOWED_FILE_ACCEPT = '.pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
 
 export const MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024; // 25 MB

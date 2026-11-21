@@ -43,7 +43,15 @@ async function summarizeOlderMessages(messages: ModelMessage[]): Promise<string>
         typeof m.content === 'string'
           ? m.content
           : Array.isArray(m.content)
-            ? m.content.map((c: any) => c.text || '').join(' ')
+            ? m.content
+                .map((c: unknown) => {
+                  if (typeof c === 'string') return c;
+                  if (c && typeof c === 'object' && 'text' in c) {
+                    return String((c as { text?: unknown }).text ?? '');
+                  }
+                  return '';
+                })
+                .join(' ')
             : JSON.stringify(m.content);
       return `${m.role}: ${content}`;
     })
