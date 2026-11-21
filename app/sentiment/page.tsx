@@ -2,6 +2,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, BarChart3, Loader2 } from "lucide-react";
 
 type SentimentResult = {
   success: boolean;
@@ -55,17 +57,29 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-white px-5 py-16">
       <div className="max-w-2xl mx-auto">
 
-        <div className="text-center mb-10">
-          <p className="text-sm text-indigo-400 font-medium mb-3">
-            HUGGING FACE · TRANSFORMERS
-          </p>
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            href="/"
+            className="text-xs font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-1.5"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Studio</span>
+          </Link>
+          <span className="text-[11px] font-mono text-slate-400 bg-slate-900 px-2.5 py-0.5 rounded border border-slate-800">
+            Hugging Face · Transformers
+          </span>
+        </div>
 
-          <h1 className="text-4xl font-bold mb-3">
-            Sentiment Analyzer
+        <div className="text-center mb-8">
+          <div className="w-8 h-8 mx-auto rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-200 mb-3">
+            <BarChart3 className="w-4 h-4" />
+          </div>
+          <h1 className="text-2xl font-bold mb-1.5 tracking-tight text-white">
+            Sentiment Analysis
           </h1>
 
-          <p className="text-slate-400">
-            Analyze text using a pre-trained AI model.
+          <p className="text-slate-400 text-xs">
+            Classify text polarity and confidence using a pre-trained transformer model.
           </p>
         </div>
 
@@ -81,7 +95,7 @@ export default function Home() {
             placeholder="Example: I absolutely love this product. The experience has been amazing!"
             rows={6}
             maxLength={5000}
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 resize-none"
+            className="w-full bg-slate-950 border border-slate-700/80 rounded-2xl p-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#0d9488] focus:ring-2 focus:ring-[#0d9488]/20 transition-all resize-none shadow-inner text-sm"
           />
 
           <div className="flex justify-between text-xs text-slate-500 mt-2">
@@ -92,9 +106,16 @@ export default function Home() {
           <button
             onClick={handleAnalyze}
             disabled={loading || !text.trim()}
-            className="w-full mt-5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl py-3 font-semibold transition"
+            className="w-full mt-5 bg-[#0d9488] hover:bg-[#0f766e] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl py-2.5 font-medium transition-colors text-xs flex items-center justify-center gap-2 cursor-pointer"
           >
-            {loading ? "Analyzing..." : "Analyze Sentiment"}
+            {loading ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Analyzing...</span>
+              </>
+            ) : (
+              <span>Analyze Sentiment</span>
+            )}
           </button>
 
           {error && (

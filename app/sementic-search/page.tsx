@@ -22,8 +22,8 @@ export default function SemanticSearchPage() {
   } = useSemanticSearch();
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white px-6 py-16">
-      <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans px-4 sm:px-6 py-12">
+      <div className="max-w-4xl mx-auto">
         <SemanticSearchHeader />
 
         <SemanticSearchForm

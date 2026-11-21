@@ -3,6 +3,7 @@
 import { useChat } from '@ai-sdk/react';
 import { useState, type ComponentPropsWithoutRef } from 'react';
 import Link from 'next/link';
+import { Bot, BookOpen, UploadCloud, Home, Send, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -30,30 +31,41 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
       {/* Header */}
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <h1 className="text-base font-semibold flex items-center gap-2">
-            <span>⚡</span> AI Chat Assistant
-          </h1>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-zinc-500">
-              Groq • openai/gpt-oss-20b
-            </span>
-            <span className="text-zinc-300 dark:text-zinc-700">|</span>
+      <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20 h-14 px-4">
+        <div className="max-w-2xl mx-auto h-full flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 flex items-center justify-center">
+              <Bot className="w-3.5 h-3.5" />
+            </div>
+            <h1 className="text-sm font-semibold">
+              LLM Chat
+            </h1>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
             <Link
               href="/rag-chat"
-              className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
+              className="hover:text-slate-900 dark:hover:text-slate-100 transition-colors flex items-center gap-1"
             >
-              📚 RAG Chat →
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>RAG Chat</span>
             </Link>
-            <span className="text-zinc-300 dark:text-zinc-700">|</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
             <Link
-              href="/sentiment"
-              className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              href="/upload"
+              className="hover:text-slate-900 dark:hover:text-slate-100 transition-colors flex items-center gap-1"
             >
-              🤗 Sentiment Analysis →
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>Upload</span>
+            </Link>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
+            <Link
+              href="/"
+              className="p-1 rounded hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+              title="Home"
+            >
+              <Home className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
@@ -80,10 +92,10 @@ export default function ChatPage() {
                 </div>
 
                 <div
-                  className={`rounded-2xl px-4 py-3 max-w-[85%] text-sm leading-relaxed shadow-sm ${
+                  className={`rounded-2xl px-4 py-3 max-w-[85%] text-sm leading-relaxed ${
                     isUser
-                      ? 'bg-blue-600 text-white rounded-br-none whitespace-pre-wrap'
-                      : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-bl-none text-zinc-800 dark:text-zinc-200'
+                      ? 'bg-gradient-to-r from-[#0d9488] to-[#0f766e] text-white rounded-br-none shadow-[0_4px_14px_-3px_rgba(13,148,136,0.35)] whitespace-pre-wrap'
+                      : 'bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-bl-none text-slate-800 dark:text-slate-200 shadow-xs'
                   }`}
                 >
                   {isUser ? (
@@ -224,10 +236,10 @@ export default function ChatPage() {
       </main>
 
       {/* Input */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur border-t border-zinc-200 dark:border-zinc-800 p-4">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 sm:p-4">
         <form className="max-w-2xl mx-auto flex gap-2" onSubmit={handleSubmit}>
           <input
-            className="flex-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 px-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3.5 py-2 rounded-lg text-sm focus:outline-none focus:border-[#0d9488] focus:ring-1 focus:ring-[#0d9488] text-slate-900 dark:text-slate-100"
             value={input}
             disabled={isLoading}
             placeholder="Type a message..."
@@ -236,9 +248,16 @@ export default function ChatPage() {
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-xl text-sm transition-colors"
+            className="bg-[#0d9488] hover:bg-[#0f766e] disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg text-xs transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            Send
+            {isLoading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <>
+                <span>Send</span>
+                <Send className="w-3 h-3" />
+              </>
+            )}
           </button>
         </form>
       </footer>

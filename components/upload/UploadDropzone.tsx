@@ -1,3 +1,4 @@
+import { UploadCloud } from 'lucide-react';
 import {
   ALLOWED_FILE_ACCEPT,
   MAX_FILE_SIZE_LABEL,
@@ -37,10 +38,10 @@ export function UploadDropzone({
           onTriggerInput();
         }
       }}
-      className={`border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center transition-all cursor-pointer select-none ${
+      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-colors cursor-pointer select-none ${
         isDragging
-          ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30 scale-[1.01]'
-          : 'border-zinc-300 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 hover:border-zinc-400 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/70'
+          ? 'border-[#0d9488] bg-[#0d9488]/5'
+          : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-400 dark:hover:border-slate-700'
       }`}
     >
       <input
@@ -51,28 +52,28 @@ export function UploadDropzone({
         className="hidden"
       />
 
-      <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl shadow-xs">
-        📁
+      <div className="w-10 h-10 mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center mb-3">
+        <UploadCloud className="w-5 h-5 text-slate-700 dark:text-slate-300" />
       </div>
 
-      <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-        Choose a file or drag & drop it here
+      <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+        Choose a file or drag and drop
       </h3>
-      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
-        Upload a document to extract text, chunk with semantic boundaries, and store embeddings in PostgreSQL.
+      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
+        Upload PDF, DOCX, or TXT documents to extract text and generate vector embeddings.
       </p>
 
       {/* Badges */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 mt-5">
         {SUPPORTED_FORMAT_BADGES.map((badge) => (
           <span
             key={badge.ext}
-            className={`text-[11px] font-medium px-2.5 py-1 rounded-full border ${badge.color}`}
+            className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
           >
-            {badge.label}
+            {badge.ext}
           </span>
         ))}
-        <span className="text-[11px] font-medium px-2.5 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800">
+        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
           Max {MAX_FILE_SIZE_LABEL}
         </span>
       </div>
@@ -84,9 +85,9 @@ export function UploadDropzone({
             e.stopPropagation();
             onTriggerInput();
           }}
-          className="px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 hover:opacity-90 transition-opacity shadow-xs"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 hover:opacity-90 transition-opacity"
         >
-          Browse Files
+          Browse file
         </button>
       </div>
     </div>

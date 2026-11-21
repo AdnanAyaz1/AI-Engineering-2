@@ -1,3 +1,5 @@
+import { Send, Loader2 } from 'lucide-react';
+
 interface RagChatInputBarProps {
   input: string;
   isLoading: boolean;
@@ -16,8 +18,8 @@ export function RagChatInputBar({
   onSubmit,
 }: RagChatInputBarProps) {
   return (
-    <footer className="fixed bottom-0 left-0 right-0 border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur p-4 z-20 shadow-md">
-      <div className="max-w-3xl mx-auto">
+    <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 sm:p-4 z-20">
+      <div className="max-w-4xl mx-auto">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -31,29 +33,29 @@ export function RagChatInputBar({
             value={input}
             onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Ask a question about your documents... (Enter to send, Shift+Enter for newline)"
-            className="flex-1 resize-none px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+            placeholder="Type your question... (Enter to send, Shift+Enter for newline)"
+            className="flex-1 resize-none px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-sm focus:outline-none focus:border-[#0d9488] focus:ring-1 focus:ring-[#0d9488] transition-colors"
             disabled={isLoading}
           />
 
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-lg bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium text-xs disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
           >
             {isLoading ? (
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-              </svg>
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <span>Send</span>
+              <>
+                <span>Send</span>
+                <Send className="w-3.5 h-3.5" />
+              </>
             )}
           </button>
         </form>
 
-        <p className="text-[11px] text-center text-zinc-400 dark:text-zinc-500 mt-2">
-          Answers are grounded strictly in your indexed documents using pgvector and Groq.
+        <p className="text-[11px] text-center text-slate-400 dark:text-slate-500 mt-2">
+          Responses are grounded strictly in your indexed documents via pgvector.
         </p>
       </div>
     </footer>
