@@ -43,6 +43,13 @@ export default function ChatPage() {
             </span>
             <span className="text-zinc-300 dark:text-zinc-700">|</span>
             <Link
+              href="/rag-chat"
+              className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
+            >
+              📚 RAG Chat →
+            </Link>
+            <span className="text-zinc-300 dark:text-zinc-700">|</span>
+            <Link
               href="/sentiment"
               className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
             >
