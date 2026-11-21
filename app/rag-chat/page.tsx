@@ -5,9 +5,9 @@ import {
   RagChatHeader,
   RagChatEmptyState,
   RagChatMessageItem,
-  RagChatInputBar,
-  RagChatErrorBanner,
   RagChatLoadingIndicator,
+  RagChatErrorBanner,
+  RagChatInputBar,
 } from '@/components/rag-chat';
 
 export default function RagChatPage() {
@@ -29,27 +29,26 @@ export default function RagChatPage() {
   } = useRagChat();
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+    <div className="flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
       <RagChatHeader topK={topK} onTopKChange={setTopK} />
 
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 pb-36 space-y-5">
         <RagChatErrorBanner error={error} onDismiss={dismissError} />
 
         {messages.length === 0 ? (
-          <RagChatEmptyState onSelectPrompt={handleSend} />
+          <RagChatEmptyState onSelectPrompt={(prompt) => handleSend(prompt)} />
         ) : (
-          messages.map((message) => (
+          messages.map((msg) => (
             <RagChatMessageItem
-              key={message.id}
-              message={message}
-              isExpanded={!!expandedSources[message.id]}
+              key={msg.id}
+              message={msg}
+              isExpanded={Boolean(expandedSources[msg.id])}
               onToggleSources={toggleSources}
             />
           ))
         )}
 
         {isLoading && <RagChatLoadingIndicator />}
-
         <div ref={messagesEndRef} />
       </main>
 

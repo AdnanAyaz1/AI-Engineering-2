@@ -1,41 +1,17 @@
-import React from 'react';
+import { Bot } from 'lucide-react';
 
-interface ChatEmptyStateProps {
-  onSelectPrompt: (promptText: string) => void;
-}
-
-const STARTER_PROMPTS = [
-  'Explain how neural networks learn in simple terms.',
-  'Write a Python script to find duplicate files in a directory.',
-  'What are the main architectural trade-offs of microservices?',
-];
-
-export const ChatEmptyState: React.FC<ChatEmptyStateProps> = ({ onSelectPrompt }) => {
+export function ChatEmptyState() {
   return (
-    <div className="text-center py-16 space-y-4">
-      <div className="text-5xl">💬</div>
-      <h2 className="text-xl font-semibold">Conversational AI Chatbot</h2>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-md mx-auto">
-        Features automated rolling conversation summarization when chat history grows, along with real-time token tracking and cost calculation.
-      </p>
-
-      <div className="pt-4">
-        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-          Try a prompt:
-        </p>
-        <div className="flex flex-wrap justify-center gap-2">
-          {STARTER_PROMPTS.map((prompt, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => onSelectPrompt(prompt)}
-              className="text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 px-3 py-2 rounded-lg transition-colors text-left"
-            >
-              {prompt}
-            </button>
-          ))}
-        </div>
+    <div className="text-center py-20 px-4 max-w-sm mx-auto">
+      <div className="w-10 h-10 mx-auto rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-3.5 shadow-2xs">
+        <Bot className="w-5 h-5 text-teal-600 dark:text-teal-400" />
       </div>
+      <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        Direct Groq Inference
+      </h3>
+      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed [text-wrap:pretty]">
+        Send a prompt to test streaming latency, reasoning generation, and exact token cost tracking.
+      </p>
     </div>
   );
-};
+}

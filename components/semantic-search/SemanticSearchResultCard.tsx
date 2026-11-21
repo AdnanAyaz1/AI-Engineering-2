@@ -6,44 +6,41 @@ interface SemanticSearchResultCardProps {
   index: number;
 }
 
-export function SemanticSearchResultCard({ result, index }: SemanticSearchResultCardProps) {
-  const percentage = (result.score * 100).toFixed(1);
+export function SemanticSearchResultCard({
+  result,
+  index,
+}: SemanticSearchResultCardProps) {
+  const percentage = Math.round(result.score * 100);
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 mb-3">
-      <div className="flex justify-between items-start gap-4 mb-2.5">
-        <div>
-          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-0.5">
-            Result #{index + 1}
-          </span>
-          <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
-            {result.title}
-          </h3>
-        </div>
+    <div className="bg-white dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
+      {/* Result Card Header */}
+      <div className="flex items-center justify-between text-xs">
+        <span className="font-mono text-zinc-400 font-medium tabular-nums">
+          #{String(index + 1).padStart(2, '0')}
+        </span>
 
-        <div className="text-right shrink-0">
-          <span className="inline-block px-2 py-0.5 rounded text-[11px] font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        {/* Match Percentage Pill */}
+        <div className="flex items-center gap-2">
+          <div className="w-16 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-teal-600 dark:bg-teal-500 rounded-full"
+              style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
+            />
+          </div>
+          <span className="font-mono text-[11px] font-semibold tabular-nums text-teal-700 dark:text-teal-400">
             {percentage}% match
           </span>
         </div>
       </div>
 
+      {/* Chunk Content */}
       <FormattedChunk
         content={result.content}
-        accentColor="teal"
-        maxHeightClass="max-h-56"
-        className="my-2.5"
+        metadata={{ source: result.title }}
+        similarity={result.score}
+        compact
       />
-
-      {/* Progress bar */}
-      <div className="mt-3 h-1 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-[#0d9488] rounded-full"
-          style={{
-            width: `${Math.max(0, Math.min(100, result.score * 100))}%`,
-          }}
-        />
-      </div>
     </div>
   );
 }

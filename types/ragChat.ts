@@ -6,6 +6,8 @@ export interface RetrievedSource {
   similarity: number;
 }
 
+export type RagSource = RetrievedSource;
+
 export interface MessageUsage {
   inputTokens: number;
   outputTokens: number;

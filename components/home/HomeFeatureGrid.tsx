@@ -5,7 +5,7 @@ import {
   Search,
   MessageSquare,
   BarChart3,
-  ArrowRight,
+  ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -15,6 +15,7 @@ interface FeatureCardProps {
   href: string;
   icon: LucideIcon;
   badge?: string;
+  accent?: string;
 }
 
 function FeatureCard({
@@ -27,31 +28,34 @@ function FeatureCard({
   return (
     <Link
       href={href}
-      className="group relative p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-all duration-150 flex flex-col justify-between"
+      className="group relative p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-[0_6px_20px_rgba(0,0,0,0.05)] dark:hover:shadow-[0_6px_20px_rgba(0,0,0,0.3)] active:scale-[0.985] transition-[transform,border-color,box-shadow,background-color] duration-150 ease-out flex flex-col justify-between"
     >
       <div>
-        <div className="flex items-center justify-between gap-3 mb-3.5">
-          <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center border border-slate-200/80 dark:border-slate-700">
-            <Icon className="w-4 h-4 text-slate-800 dark:text-slate-200" />
+        {/* Header row: Icon & Badge */}
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="w-9 h-9 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center border border-zinc-200/70 dark:border-zinc-700/70 group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-zinc-100 dark:group-hover:text-zinc-900 transition-[background-color,color] duration-150 ease-out">
+            <Icon className="w-4 h-4" />
           </div>
           {badge && (
-            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] font-mono tabular-nums text-zinc-500 dark:text-zinc-400 px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-750">
               {badge}
             </span>
           )}
         </div>
 
-        <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-[#0d9488] dark:group-hover:text-teal-400 transition-colors">
+        {/* Content */}
+        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 [text-wrap:balance]">
           {title}
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5 leading-relaxed [text-wrap:pretty]">
           {description}
         </p>
       </div>
 
-      <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-medium text-slate-500 group-hover:text-[#0d9488] dark:group-hover:text-teal-400 transition-colors">
-        <span>Open module</span>
-        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+      {/* Footer link */}
+      <div className="mt-5 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-xs font-medium text-zinc-500 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+        <span>Launch module</span>
+        <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150 ease-out" />
       </div>
     </Link>
   );
@@ -59,11 +63,11 @@ function FeatureCard({
 
 export function HomeFeatureGrid() {
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+    <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <FeatureCard
           title="RAG Document Chat"
-          description="Ask questions grounded in indexed knowledge with verifiable chunk citations."
+          description="Ask questions grounded strictly in indexed knowledge with verifiable chunk citations."
           href="/rag-chat"
           icon={BookOpen}
           badge="pgvector + Groq"
@@ -71,10 +75,10 @@ export function HomeFeatureGrid() {
 
         <FeatureCard
           title="Document Ingestion"
-          description="Upload PDF, DOCX, or TXT files to extract text and store vector embeddings."
+          description="Upload PDF, DOCX, or TXT files to extract structured text and store vector embeddings."
           href="/upload"
           icon={UploadCloud}
-          badge="Embeddings"
+          badge="384-dim"
         />
 
         <FeatureCard
@@ -87,15 +91,15 @@ export function HomeFeatureGrid() {
 
         <FeatureCard
           title="Direct LLM Chat"
-          description="Conversational chat with Groq gpt-oss-20b with live token and cost telemetry."
+          description="Stream conversations with Groq openai/gpt-oss-20b with real-time token cost telemetry."
           href="/chatbot"
           icon={MessageSquare}
-          badge="Groq API"
+          badge="Groq Stream"
         />
 
         <FeatureCard
           title="Sentiment Analysis"
-          description="Score text sentiment and confidence with Hugging Face transformer models."
+          description="Classify text sentiment polarity and model confidence scores using transformer models."
           href="/sentiment"
           icon={BarChart3}
           badge="Transformers"

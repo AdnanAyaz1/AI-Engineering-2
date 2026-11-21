@@ -3,12 +3,12 @@ import { Loader2 } from 'lucide-react';
 export function RagChatLoadingIndicator() {
   return (
     <div className="flex flex-col items-start">
-      <div className="text-[11px] font-medium text-slate-400 mb-1">
+      <div className="text-[11px] text-zinc-400 dark:text-zinc-500 mb-1 font-medium">
         Assistant
       </div>
-      <div className="rounded-xl rounded-bl-none px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2.5">
-        <Loader2 className="w-4 h-4 animate-spin text-[#0d9488]" />
-        <span>Retrieving passages & synthesizing answer...</span>
+      <div className="rounded-2xl rounded-bl-sm px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 shadow-2xs flex items-center gap-2.5 text-xs text-zinc-500 dark:text-zinc-400">
+        <Loader2 className="w-4 h-4 animate-spin text-teal-600 dark:text-teal-400" />
+        <span>Retrieving relevant chunks & generating answer...</span>
       </div>
     </div>
   );

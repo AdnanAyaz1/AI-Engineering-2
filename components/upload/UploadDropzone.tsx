@@ -38,10 +38,10 @@ export function UploadDropzone({
           onTriggerInput();
         }
       }}
-      className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-colors cursor-pointer select-none ${
+      className={`border-2 border-dashed rounded-2xl p-8 sm:p-14 text-center cursor-pointer select-none transition-[border-color,background-color] duration-150 ease-out ${
         isDragging
-          ? 'border-[#0d9488] bg-[#0d9488]/5'
-          : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-400 dark:hover:border-slate-700'
+          ? 'border-teal-500 bg-teal-500/5 dark:bg-teal-500/10'
+          : 'border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-zinc-400 dark:hover:border-zinc-700 shadow-2xs'
       }`}
     >
       <input
@@ -52,15 +52,16 @@ export function UploadDropzone({
         className="hidden"
       />
 
-      <div className="w-10 h-10 mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center mb-3">
-        <UploadCloud className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+      {/* Concentric Icon Box */}
+      <div className="w-11 h-11 mx-auto rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-4 shadow-2xs">
+        <UploadCloud className="w-5 h-5 text-teal-600 dark:text-teal-400" />
       </div>
 
-      <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-        Choose a file or drag and drop
+      <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 [text-wrap:balance]">
+        Select a document or drag and drop
       </h3>
-      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
-        Upload PDF, DOCX, or TXT documents to extract text and generate vector embeddings.
+      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto leading-relaxed [text-wrap:pretty]">
+        PDF, DOCX, or plain text. The engine parses raw text into semantic chunks and writes embeddings directly to PostgreSQL.
       </p>
 
       {/* Badges */}
@@ -68,12 +69,12 @@ export function UploadDropzone({
         {SUPPORTED_FORMAT_BADGES.map((badge) => (
           <span
             key={badge.ext}
-            className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+            className="text-[10px] font-mono tabular-nums px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/80 dark:border-zinc-750"
           >
             {badge.ext}
           </span>
         ))}
-        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
+        <span className="text-[10px] font-mono tabular-nums px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-500 border border-zinc-200/80 dark:border-zinc-750">
           Max {MAX_FILE_SIZE_LABEL}
         </span>
       </div>
@@ -85,9 +86,9 @@ export function UploadDropzone({
             e.stopPropagation();
             onTriggerInput();
           }}
-          className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 hover:opacity-90 transition-opacity"
+          className="px-4 py-2 rounded-xl text-xs font-medium bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 shadow-2xs active:scale-[0.97] transition-[transform,background-color] duration-150 ease-out cursor-pointer"
         >
-          Browse file
+          Browse files
         </button>
       </div>
     </div>
