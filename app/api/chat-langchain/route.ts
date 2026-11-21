@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { model } from "@/lib/ai/model";
+import { companyAssistantPrompt } from "@/lib/ai/prompt";
+import { companyDetails } from "@/constants/ai/systemPrompt";
+
+// Compose prompt and model into one chain
+const chatChain = companyAssistantPrompt.pipe(model);
 
 export async function POST(req: NextRequest) {
   try {
     const { message } = await req.json();
 
-    const response = await model.invoke([
-      new SystemMessage(
-        "You are Nexora Technologies' AI assistant. " +
-          "Nexora is a software development company specializing " +
-          "in SaaS applications, AI solutions, and custom software.",
-      ),
-      new HumanMessage(message),
-    ]);
+    const response = await chatChain.invoke({
+      ...companyDetails,
+      question: message,
+    });
 
     return NextResponse.json({
       response: response.content,
