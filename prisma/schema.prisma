@@ -19,11 +19,10 @@ model DocumentChunk {
   content    String @db.Text
   chunkIndex Int
 
-  embedding Unsupported("vector(768)")?
+  embedding Unsupported("vector(384)")?
 
   documentId String
-
-  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

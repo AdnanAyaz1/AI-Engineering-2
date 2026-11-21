@@ -1,5 +1,5 @@
-import PQueue from "p-queue";
-import { embeddings } from "./embeddings";
+
+import { embedTexts } from "./embeddings";
 
 type DocumentChunk = {
   content: string;
@@ -10,22 +10,12 @@ type DocumentChunk = {
   };
 };
 
-const queue = new PQueue({
-  concurrency: 10,
-  intervalCap: 90,
-  interval: 60_000,
-});
-
 export async function embedChunks(chunks: DocumentChunk[]) {
   if (!chunks.length) return [];
 
-  const vectors = await Promise.all(
-    chunks.map((chunk) =>
-      queue.add(() => embeddings.embedQuery(chunk.content)),
-    ),
-  );
+  const texts = chunks.map((chunk) => chunk.content);
 
-  
+  const vectors = await embedTexts(texts);
 
   return chunks.map((chunk, index) => ({
     ...chunk,
