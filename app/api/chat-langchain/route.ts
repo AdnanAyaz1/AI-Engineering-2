@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { model } from "@/lib/ai/model";
+import { structuredModel } from "@/lib/ai/model";
 import { companyAssistantPrompt } from "@/lib/ai/prompt";
 import { companyDetails } from "@/constants/ai/systemPrompt";
 
 // Compose prompt and model into one chain
-const chatChain = companyAssistantPrompt.pipe(model);
+const chatChain = companyAssistantPrompt.pipe(structuredModel);
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({
-      response: response.content,
+      response: response,
     });
   } catch (error) {
     console.error("Chat error:", error);
