@@ -1,0 +1,13 @@
+import { Annotation } from "@langchain/langgraph";
+
+export const WorkflowState = Annotation.Root({
+  task: Annotation<string>(),
+
+  draft: Annotation<string>(),
+
+  score: Annotation<number>(),
+
+  feedback: Annotation<string>(),
+
+  iteration: Annotation<number>(),
+});

@@ -1,36 +1,19 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { writerGraph } from "@/lib/agentic-ai/graph";
 
-export async function POST() {
-  try {
-    // 1. Insert a document
-    const document = await prisma.document.create({
-      data: {
-        fileName: "database-test.txt",
-      },
-    });
+export async function POST(req: Request) {
+  const { task } = await req.json();
 
-    // 2. Retrieve the document
-    const retrievedDocument = await prisma.document.findUnique({
-      where: {
-        id: document.id,
-      },
-    });
+  const result = await writerGraph.invoke({
+    task,
+    draft: "",
+    score: 0,
+    feedback: "",
+    iteration: 0,
+  });
 
-    return NextResponse.json({
-      success: true,
-      message: "Database connection successful",
-      document: retrievedDocument,
-    });
-  } catch (error) {
-    console.error("Database test failed:", error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Database operation failed",
-      },
-      { status: 500 },
-    );
-  }
+  return NextResponse.json({
+    success: true,
+    draft: result.draft,
+  });
 }
