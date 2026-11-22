@@ -1,28 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
-import { structuredModel } from "@/lib/ai/model";
-import { companyAssistantPrompt } from "@/lib/ai/prompt";
-import { companyDetails } from "@/constants/ai/systemPrompt";
-
-// Compose prompt and model into one chain
-const chatChain = companyAssistantPrompt.pipe(structuredModel);
+import { HumanMessage } from "@langchain/core/messages";
+import { chatGraph } from "@/lib/ai/chat-graph";
 
 export async function POST(req: NextRequest) {
   try {
-    const { message } = await req.json();
+    const { message, threadId } = await req.json();
 
-    const response = await chatChain.invoke({
-      ...companyDetails,
-      question: message,
-    });
+    if (
+      typeof message !== "string" ||
+      !message.trim() ||
+      typeof threadId !== "string" ||
+      !threadId.trim()
+    ) {
+      return NextResponse.json(
+        { error: "Message and threadId are required" },
+        { status: 400 },
+      );
+    }
+
+    const result = await chatGraph.invoke(
+      {
+        messages: [new HumanMessage(message)],
+      },
+      {
+        configurable: {
+          thread_id: threadId,
+        },
+      },
+    );
+
+    const lastMessage = result.messages[result.messages.length - 1];
 
     return NextResponse.json({
-      response: response,
+      success: true,
+      response: lastMessage.content,
+      threadId,
     });
   } catch (error) {
     console.error("Chat error:", error);
 
     return NextResponse.json(
-      { error: "Unable to generate response" },
+      { error: "Failed to generate response" },
       { status: 500 },
     );
   }
