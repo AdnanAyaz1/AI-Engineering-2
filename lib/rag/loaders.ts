@@ -18,15 +18,17 @@ export async function loadDocxFile(file: File) {
 }
 
 export async function loadPdfFile(file: File) {
-  const buffer = await file.arrayBuffer();
+  try {
+    const buffer = await file.arrayBuffer();
 
-  const pdf = await getDocumentProxy(
-    new Uint8Array(buffer)
-  );
+    const pdf = await getDocumentProxy(new Uint8Array(buffer));
 
-  const result = await extractText(pdf, {
-    mergePages: true,
-  });
+    const result = await extractText(pdf, {
+      mergePages: true,
+    });
 
-  return result.text;
+    return result.text;
+  } catch (error) {
+    console.log("PDF ERROR", error);
+  }
 }

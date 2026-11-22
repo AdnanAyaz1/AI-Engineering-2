@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { writerGraph } from "@/lib/agentic-ai/graph";
 
 export async function POST(req: Request) {
   try {
     const { task } = await req.json();
 
-    if (!task || typeof task !== "string") {
+    if (!task || typeof task !== "string" || !task.trim()) {
       return NextResponse.json(
         {
           success: false,
@@ -15,9 +16,18 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await writerGraph.invoke({
-      task,
-    });
+    const threadId = randomUUID();
+
+    const result = await writerGraph.invoke(
+      {
+        task: task.trim(),
+      },
+      {
+        configurable: {
+          thread_id: threadId,
+        },
+      },
+    );
 
     const usage = result.tokenUsage;
 
@@ -34,11 +44,31 @@ export async function POST(req: Request) {
       costUSD: (usage.writer?.costUSD ?? 0) + (usage.review?.costUSD ?? 0),
     };
 
+    // Workflow paused and is waiting for human input.
+    const interruptData = (
+      result as typeof result & { __interrupt__?: { value: unknown }[] }
+    ).__interrupt__?.[0]?.value;
+
+    if (interruptData) {
+      return NextResponse.json({
+        success: true,
+        status: "awaiting_human",
+        threadId,
+        humanReview: interruptData,
+        history: result.history,
+        tokenUsage: {
+          agents: usage,
+          pipelineTotal,
+        },
+      });
+    }
+
     return NextResponse.json({
       success: true,
+      status: "completed",
 
       draft: result.bestDraft,
-      review: result.review,
+      review: result.bestReview,
 
       evaluation: {
         bestScore: result.bestScore,

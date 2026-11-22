@@ -1,4 +1,3 @@
-
 import { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from "node:crypto";
@@ -12,6 +11,8 @@ type EmbeddedChunk = {
   };
   embedding: number[];
 };
+
+const BATCH_SIZE = 25;
 
 export async function storeDocument(
   fileName: string,
@@ -30,14 +31,15 @@ export async function storeDocument(
     }
   }
 
-  // 2. Prepare SQL values
-  return prisma.$transaction(async (tx) => {
-    const document = await tx.document.create({
-      data: {
-        fileName,
-      },
-    });
+  // 2. Create the document record
+  const document = await prisma.document.create({
+    data: {
+      fileName,
+    },
+  });
 
+  try {
+    // 3. Prepare chunk rows with pgvector
     const chunkRows = chunks.map((chunk) => {
       const vector = `[${chunk.embedding.join(",")}]`;
 
@@ -51,15 +53,23 @@ export async function storeDocument(
       )`;
     });
 
-    await tx.$executeRaw(Prisma.sql`
-      INSERT INTO "DocumentChunk"
-        ("id", "content", "chunkIndex", "documentId", "createdAt", "embedding")
-      VALUES ${Prisma.join(chunkRows)}
-    `);
+    // 4. Batch insert all chunks in atomic batches
+    for (let i = 0; i < chunkRows.length; i += BATCH_SIZE) {
+      const batch = chunkRows.slice(i, i + BATCH_SIZE);
+      await prisma.$executeRaw(Prisma.sql`
+        INSERT INTO "DocumentChunk"
+          ("id", "content", "chunkIndex", "documentId", "createdAt", "embedding")
+        VALUES ${Prisma.join(batch)}
+      `);
+    }
 
     return {
       documentId: document.id,
       totalChunks: chunks.length,
     };
-  });
+  } catch (err) {
+    // Clean up document on failure so no partial/orphaned record remains
+    await prisma.document.delete({ where: { id: document.id } }).catch(() => {});
+    throw err;
+  }
 }

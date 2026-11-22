@@ -9,11 +9,13 @@ import {
   BookOpen,
   MessageSquare,
   BarChart3,
+  Sparkles,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 const NAV_LINKS = [
   { href: '/', label: 'Overview', icon: Layers },
+  { href: '/agentic-writer', label: 'Agentic Copy', icon: Sparkles },
   { href: '/upload', label: 'Ingest', icon: UploadCloud },
   { href: '/sementic-search', label: 'Search', icon: Search },
   { href: '/rag-chat', label: 'RAG Chat', icon: BookOpen },
@@ -86,6 +88,13 @@ export function AppHeader({ children, activeBadge }: AppHeaderProps) {
 
           {/* Mobile Quick Nav */}
           <div className="flex md:hidden items-center gap-1">
+            <Link
+              href="/agentic-writer"
+              className="p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              title="Agentic Copy"
+            >
+              <Sparkles className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            </Link>
             <Link
               href="/rag-chat"
               className="p-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"

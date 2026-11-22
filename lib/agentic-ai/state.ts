@@ -14,9 +14,13 @@ export const WorkflowState = Annotation.Root({
 
   tokenUsage: Annotation<TokenUsageState>({
     reducer: (current, update) => {
-      const merged = { ...current };
+      const merged: TokenUsageState = { ...current };
 
-      for (const [agent, usage] of Object.entries(update)) {
+      for (const agent of ["writer", "review"] as const) {
+        const usage = update[agent];
+
+        if (!usage) continue;
+
         const previous = merged[agent] ?? {
           inputTokens: 0,
           outputTokens: 0,
@@ -25,10 +29,10 @@ export const WorkflowState = Annotation.Root({
         };
 
         merged[agent] = {
-          inputTokens: previous.inputTokens + (usage?.inputTokens ?? 0),
-          outputTokens: previous.outputTokens + (usage?.outputTokens ?? 0),
-          totalTokens: previous.totalTokens + (usage?.totalTokens ?? 0),
-          costUSD: previous.costUSD + (usage?.costUSD ?? 0),
+          inputTokens: previous.inputTokens + usage.inputTokens,
+          outputTokens: previous.outputTokens + usage.outputTokens,
+          totalTokens: previous.totalTokens + usage.totalTokens,
+          costUSD: previous.costUSD + usage.costUSD,
         };
       }
 
@@ -49,13 +53,18 @@ export const WorkflowState = Annotation.Root({
     default: () => null,
   }),
 
+  bestReview: Annotation<z.infer<typeof reviewerSchema> | null>({
+    value: (_, update) => update,
+    default: () => null,
+  }),
+
   bestScore: Annotation<number>({
     value: (_, update) => update,
     default: () => 0,
   }),
 
-  // Decider output
-  decision: Annotation<"stop" | "improve">({
+  // Workflow decision
+  decision: Annotation<"stop" | "improve" | "human_review">({
     value: (_, update) => update,
     default: () => "improve",
   }),
@@ -63,6 +72,22 @@ export const WorkflowState = Annotation.Root({
   decisionReason: Annotation<string>({
     value: (_, update) => update,
     default: () => "",
+  }),
+
+  // Human-in-the-loop
+  humanAction: Annotation<"approve" | "improve" | null>({
+    value: (_, update) => update,
+    default: () => null,
+  }),
+
+  humanFeedback: Annotation<string>({
+    value: (_, update) => update,
+    default: () => "",
+  }),
+
+  humanRevisionUsed: Annotation<boolean>({
+    value: (_, update) => update,
+    default: () => false,
   }),
 
   // Store every draft-review pair

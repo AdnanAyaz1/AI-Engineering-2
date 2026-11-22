@@ -1,51 +1,73 @@
-
 import type { WorkflowStateType } from "../state";
 
 const PASSING_SCORE = 8.5;
 const MAX_ITERATIONS = 2;
+const TOKEN_LIMIT = 7500;
 
 export function deciderAgent(state: WorkflowStateType) {
   const currentScore = state.review.score;
 
-  // Determine whether the current draft is the best one.
-  const isBetter =
-    currentScore > state.bestScore ||
-    state.bestDraft === null;
+  const isBetter = state.bestDraft === null || currentScore > state.bestScore;
 
-  const bestDraft = isBetter
-    ? state.draft
-    : state.bestDraft;
+  const bestDraft = isBetter ? state.draft : state.bestDraft;
+  const bestReview = isBetter ? state.review : state.bestReview;
+  const bestScore = isBetter ? currentScore : state.bestScore;
 
-  const bestScore = isBetter
-    ? currentScore
-    : state.bestScore;
+  const totalTokens =
+    (state.tokenUsage.writer?.totalTokens ?? 0) +
+    (state.tokenUsage.review?.totalTokens ?? 0);
 
-  // Stop when the passing score is achieved.
+  // Human-requested revision has already been completed.
+  const isHumanRevision = state.humanRevisionUsed;
+
+  const iterationIncrement = isHumanRevision ? 0 : 1;
+  const completedIterations = state.iteration + iterationIncrement;
+
+  const bestResult = {
+    bestDraft,
+    bestReview,
+    bestScore,
+    iteration: iterationIncrement,
+  };
+
+  // Passing score achieved.
   if (bestScore >= PASSING_SCORE) {
     return {
-      bestDraft,
-      bestScore,
+      ...bestResult,
       decision: "stop" as const,
       decisionReason: `Passing score achieved: ${bestScore}/10.`,
     };
   }
 
-  // Stop when no more improvement iterations are allowed.
-  if (state.iteration >= MAX_ITERATIONS) {
+  // Human-directed revision has been reviewed.
+  if (isHumanRevision) {
     return {
-      bestDraft,
-      bestScore,
+      ...bestResult,
       decision: "stop" as const,
-      decisionReason: `Maximum iterations reached. Returning best draft with score ${bestScore}/10.`,
+      decisionReason: "Human-requested improvement completed and reviewed.",
     };
   }
 
-  // Allow another improvement iteration.
+  // Maximum iterations reached.
+  if (completedIterations >= MAX_ITERATIONS) {
+    if (totalTokens < TOKEN_LIMIT) {
+      return {
+        ...bestResult,
+        decision: "human_review" as const,
+        decisionReason: `Maximum iterations reached. Token usage: ${totalTokens}/7500. Requesting human review.`,
+      };
+    }
+
+    return {
+      ...bestResult,
+      decision: "stop" as const,
+      decisionReason: `Maximum iterations and token budget reached. Total tokens: ${totalTokens}.`,
+    };
+  }
+
   return {
-    bestDraft,
-    bestScore,
-    iteration: 1,
+    ...bestResult,
     decision: "improve" as const,
-    decisionReason: `Score ${currentScore}/10 is below ${PASSING_SCORE}. Another improvement iteration is allowed.`,
+    decisionReason: `Score ${currentScore}/10 is below ${PASSING_SCORE}. Another iteration is allowed.`,
   };
 }

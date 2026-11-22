@@ -6,6 +6,7 @@ import {
   MessageSquare,
   BarChart3,
   ArrowUpRight,
+  Sparkles,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -65,6 +66,14 @@ export function HomeFeatureGrid() {
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <FeatureCard
+          title="Agentic Copywriting"
+          description="Autonomous LangGraph writer and reviewer loop with human-in-the-loop review checkpoints."
+          href="/agentic-writer"
+          icon={Sparkles}
+          badge="LangGraph + HITL"
+        />
+
         <FeatureCard
           title="RAG Document Chat"
           description="Ask questions grounded strictly in indexed knowledge with verifiable chunk citations."

@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file");
 
+    console.log("file",file)
+
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
@@ -27,7 +29,7 @@ export async function POST(req: NextRequest) {
         break;
 
       case "pdf":
-        content = await loadPdfFile(file);
+        content = await loadPdfFile(file) as string;
         break;
 
       default:
