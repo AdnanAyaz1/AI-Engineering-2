@@ -7,7 +7,9 @@ export const WorkflowState = Annotation.Root({
 
   score: Annotation<number>(),
 
-  feedback: Annotation<string>(),
+  feedback: Annotation<string[]>(),
+
+  strengths: Annotation<string[]>(),
 
   iteration: Annotation<number>(),
 });
