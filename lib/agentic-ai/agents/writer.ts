@@ -1,29 +1,59 @@
 import { model } from "../model";
+import { writerSchema } from "../schemas/writer.schema";
 import { WorkflowState } from "../state";
+import { extractTokenUsage } from "../helpers/token-usage";
+
+const structuredModel = model.withStructuredOutput(writerSchema, {
+  includeRaw: true,
+});
 
 export async function writerAgent(state: typeof WorkflowState.State) {
-  const response = await model.invoke([
+  const isImprovement = state.iteration > 0;
+
+  const response = await structuredModel.invoke([
     [
       "system",
-      `You are an expert landing-page copywriter.
+      `You are a conversion-focused landing-page copywriter for 10xDevs, a software development company.
 
-You write compelling, professional, conversion-focused website content.
+Create a compelling headline, supporting description, and CTA.
 
-The company is 10xDevs, a software development services company.
+Rules:
+- Be concise, specific, and professional.
+- Avoid generic marketing language.
+- Preserve the original task and company positioning.
+- Never invent statistics, clients, testimonials, or achievements.
+- Return only content matching the provided schema.
 
-Your task is to produce high-quality landing-page content based on the user's requirements.
-
-Return:
-- A compelling headline
-- A supporting description
-- A clear call to action
-
-Avoid generic marketing language.`,
+${
+  isImprovement
+    ? `IMPROVEMENT:
+Revise the previous draft using reviewer feedback.
+Preserve strengths, fix weaknesses, and avoid unnecessary rewrites.`
+    : `INITIAL GENERATION:
+Create an original draft based on the user's requirements.`
+}`,
     ],
-    ["human", state.task],
+    [
+      "human",
+      JSON.stringify({
+        task: state.task,
+        ...(isImprovement && {
+          currentDraft: state.draft,
+          feedback: state.review.feedback,
+          previousScore: state.review.score,
+        }),
+      }),
+    ],
   ]);
 
+  if (!response.parsed) {
+    throw new Error("Writer failed to generate valid structured content.");
+  }
+
   return {
-    draft: response.content.toString(),
+    draft: response.parsed,
+    tokenUsage: {
+      writer: extractTokenUsage(response.raw),
+    },
   };
 }
