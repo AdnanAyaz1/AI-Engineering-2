@@ -9,24 +9,18 @@ import { humanReviewAgent } from "./agents/humanReview";
 const workflow = new StateGraph(WorkflowState)
   .addNode("writer", writerAgent)
   .addNode("critic", reviewAgent)
-  .addNode("decider", deciderAgent)
-  .addNode("human_review", humanReviewAgent)
+  .addNode("decider", deciderAgent, {
+    ends: ["writer", "human_review", END],
+  })
+  .addNode("human_review", humanReviewAgent, {
+    ends: ["writer", END],
+  })
 
   .addEdge(START, "writer")
   .addEdge("writer", "critic")
-  .addEdge("critic", "decider")
+  .addEdge("critic", "decider");
 
-  .addConditionalEdges("decider", (state) => state.decision, {
-    improve: "writer",
-    human_review: "human_review",
-    stop: END,
-  })
-
-  .addConditionalEdges("human_review", (state) => state.humanAction!, {
-    approve: END,
-    improve: "writer",
-  });
-
+// Preserve checkpointer singleton across Next.js bundles and hot-reloads
 const globalForLangGraph = globalThis as unknown as {
   writerCheckpointer?: MemorySaver;
 };
@@ -34,9 +28,7 @@ const globalForLangGraph = globalThis as unknown as {
 const checkpointer =
   globalForLangGraph.writerCheckpointer ?? new MemorySaver();
 
-if (process.env.NODE_ENV !== "production") {
-  globalForLangGraph.writerCheckpointer = checkpointer;
-}
+globalForLangGraph.writerCheckpointer = checkpointer;
 
 export const writerGraph = workflow.compile({
   checkpointer,

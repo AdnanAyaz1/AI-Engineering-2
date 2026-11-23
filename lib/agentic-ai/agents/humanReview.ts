@@ -1,4 +1,4 @@
-import { interrupt } from "@langchain/langgraph";
+import { Command, END, interrupt } from "@langchain/langgraph";
 import type { WorkflowStateType } from "../state";
 
 type HumanResponse =
@@ -16,10 +16,13 @@ export function humanReviewAgent(state: WorkflowStateType) {
   }) as HumanResponse;
 
   if (response?.action === "approve") {
-    return {
-      humanAction: "approve" as const,
-      decision: "stop" as const,
-    };
+    return new Command({
+      goto: END,
+      update: {
+        humanAction: "approve" as const,
+        decision: "stop" as const,
+      },
+    });
   }
 
   if (
@@ -27,15 +30,18 @@ export function humanReviewAgent(state: WorkflowStateType) {
     typeof response.feedback === "string" &&
     response.feedback.trim()
   ) {
-    return {
-      humanAction: "improve" as const,
-      humanFeedback: response.feedback.trim(),
-      humanRevisionUsed: true,
+    return new Command({
+      goto: "writer",
+      update: {
+        humanAction: "improve" as const,
+        humanFeedback: response.feedback.trim(),
+        humanRevisionUsed: true,
 
-      // Start the human-guided revision from the best draft.
-      draft: state.bestDraft!,
-      review: state.bestReview!,
-    };
+        // Start the human-guided revision from the best draft.
+        draft: state.bestDraft!,
+        review: state.bestReview!,
+      },
+    });
   }
 
   throw new Error("Invalid human review response.");
