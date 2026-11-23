@@ -4,18 +4,23 @@ import { retrieveChunks } from "@/lib/rag/retrieval";
 
 export const retrieveCompanyData = tool(
   async ({ query }) => {
-    const chunks = await retrieveChunks(query, 3);
+    try {
+      const chunks = await retrieveChunks(query, 3);
 
-    if (!chunks.length) {
-      return "No relevant information was found in the knowledge base.";
+      if (!chunks.length) {
+        return "No relevant information was found in the knowledge base.";
+      }
+
+      return chunks.map((chunk) => ({
+        source: chunk.documentId,
+        chunkIndex: chunk.chunkIndex,
+        similarity: chunk.similarity,
+        content: chunk.content,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      return `Failed to search knowledge base: ${message}. Proceed without this information.`;
     }
-
-    return chunks.map((chunk) => ({
-      source: chunk.documentId,
-      chunkIndex: chunk.chunkIndex,
-      similarity: chunk.similarity,
-      content: chunk.content,
-    }));
   },
   {
     name: "retrieve_company_data",

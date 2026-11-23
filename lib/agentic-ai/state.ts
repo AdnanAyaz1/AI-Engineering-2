@@ -43,50 +43,50 @@ export const WorkflowState = Annotation.Root({
 
   // Iteration tracking
   iteration: Annotation<number>({
-    value: (current, update) => current + update,
+    reducer: (current, update) => current + update,
     default: () => 0,
   }),
 
   // Best generated content
   bestDraft: Annotation<z.infer<typeof writerSchema> | null>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => null,
   }),
 
   bestReview: Annotation<z.infer<typeof reviewerSchema> | null>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => null,
   }),
 
   bestScore: Annotation<number>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => 0,
   }),
 
   // Workflow decision
   decision: Annotation<"stop" | "improve" | "human_review">({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => "improve",
   }),
 
   decisionReason: Annotation<string>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => "",
   }),
 
   // Human-in-the-loop
   humanAction: Annotation<"approve" | "improve" | null>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => null,
   }),
 
   humanFeedback: Annotation<string>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => "",
   }),
 
   humanRevisionUsed: Annotation<boolean>({
-    value: (_, update) => update,
+    reducer: (_, update) => update,
     default: () => false,
   }),
 

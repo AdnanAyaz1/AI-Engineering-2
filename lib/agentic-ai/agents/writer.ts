@@ -76,7 +76,7 @@ Create an original draft based on the user's requirements.
 
   // Aggregate token usage from all LLM invocations.
   const usage = result.messages
-    .filter((message) => message instanceof AIMessage)
+    .filter(AIMessage.isInstance)
     .map((message) => extractTokenUsage(message))
     .reduce(
       (total, current) => ({
